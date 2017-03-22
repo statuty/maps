@@ -16,14 +16,13 @@
         android:layout_height="wrap_content"
         android:paddingRight="5dp"
         android:paddingEnd="5dp"
-        android:background="@color/colorPrimary"
         android:orientation="vertical">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/add"
-            android:text="Add"
+            android:text="@string/add"
             android:onClick="onClickAdd" />
 
         <Button
@@ -31,6 +30,7 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:id="@+id/save_marker"
+            android:text="@string/save"
             android:onClick="onSave" />
 
         <Button
@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/cansel_marker"
             android:visibility="invisible"
+            android:text="@string/cansel"
             android:onClick="onCansel" />
     </LinearLayout>
 </RelativeLayout>

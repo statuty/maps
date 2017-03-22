@@ -42,9 +42,6 @@
             android:name=".AddMarkerActivity"
             android:label="@string/title_activity_add_marker"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".SaveStateActivity"
-            android:label="SaveStateActivity" />
     </application>
 
 </manifest>

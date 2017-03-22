@@ -45,6 +45,7 @@ public class MapsActivity extends AppCompatActivity
     private Button save;
     private Button cansel;
     private LatLng latLong;
+    private boolean hasMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,17 +80,19 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onMapClick(LatLng latLng) {
                 if (isEditable) {
+                    //if (!hasMarker) {
                     //latLong = latLng;
                     MarkerOptions marker = new MarkerOptions().position(
                             latLng)
                             .title("").draggable(true);
                     marker.icon(BitmapDescriptorFactory
                             .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    latLong = latLng;
                     mMap.addMarker(marker);
-
+                    hasMarker = true;
                     save.setVisibility(View.VISIBLE);
                     cansel.setVisibility(View.VISIBLE);
-
+                    // }
                 }
             }
         });
@@ -163,12 +166,10 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onMarkerDragStart(Marker marker) {
-
     }
 
     @Override
     public void onMarkerDrag(Marker marker) {
-
     }
 
     @Override
