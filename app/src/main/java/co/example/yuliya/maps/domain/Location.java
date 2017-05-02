@@ -3,6 +3,7 @@ package co.example.yuliya.maps.domain;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Location implements Serializable {
     private String id;
@@ -10,6 +11,7 @@ public class Location implements Serializable {
     private String description;
     private GeoPoint coordinates;
     private Category category;
+    private List<WorkingDay> workingDays;
 
     public Location(String id, String name, String description, GeoPoint coordinates, Category category) {
         this.id = id;
@@ -71,5 +73,13 @@ public class Location implements Serializable {
 
     public LatLng getLatLng() {
         return new LatLng(coordinates.getLat(), coordinates.getLon());
+    }
+
+    public List<WorkingDay> getWorkingDays() {
+        return workingDays;
+    }
+
+    public void setWorkingDays(List<WorkingDay> workingDays) {
+        this.workingDays = workingDays;
     }
 }
