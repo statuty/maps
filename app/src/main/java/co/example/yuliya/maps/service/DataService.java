@@ -72,6 +72,34 @@ public class DataService {
         }
     }
 
+    public List<String> getCategories() {
+        HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
+                .scheme("http")
+                .host(serverAddress)
+                .port(port)
+                .addPathSegment("locations")
+                .addPathSegment("categories");
+        Request request = new Request.Builder()
+                .url(urlBuilder.build())
+                .build();
+        Response response = null;
+        try {
+            response = new RequestTask().execute(request).get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
+            throw new RuntimeException("Couldn't receive locations");
+        }
+        if (response.code() != 200) {
+            throw new RuntimeException("Couldn't receive locations. Code = " + response.code());
+        }
+        try {
+            return mapper.readValue(response.body().string(), new TypeReference<List<String>>() {});
+        } catch (IOException e) {
+            Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
+            throw new RuntimeException("Couldn't receive locations");
+        }
+    }
+
     public Location getLocation(String id) {
         HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
                 .scheme("http")
