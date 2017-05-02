@@ -37,7 +37,7 @@ public class DataService {
         this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public List<Location> getLocations(double lan, double lon, String distance, Integer page, Integer size) {
+    public List<Location> getLocations(double lan, double lon, String distance, String category, String name, Integer page, Integer size) {
         HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
                 .scheme("http")
                 .host(serverAddress)
@@ -46,6 +46,8 @@ public class DataService {
                 .addQueryParameter("longitude", String.valueOf(lon))
                 .addQueryParameter("latitude", String.valueOf(lan));
         urlBuilder = distance != null ? urlBuilder.addQueryParameter("distance", distance) : urlBuilder;
+        urlBuilder = category != null ? urlBuilder.addQueryParameter("category", category) : urlBuilder;
+        urlBuilder = name != null ? urlBuilder.addQueryParameter("name", name) : urlBuilder;
         urlBuilder = page != null ? urlBuilder.addQueryParameter("page", page.toString()) : urlBuilder;
         urlBuilder = size != null ? urlBuilder.addQueryParameter("size", size.toString()) : urlBuilder;
         Request request = new Request.Builder()

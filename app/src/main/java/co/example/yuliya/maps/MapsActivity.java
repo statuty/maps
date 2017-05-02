@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -38,9 +37,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import co.example.yuliya.maps.domain.Category;
+import co.example.yuliya.maps.service.DataService;
 
 
 public class MapsActivity extends AppCompatActivity
@@ -235,7 +236,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-        latLng = marker.getPosition();
+        markerLatLong = marker.getPosition();
     }
 
     public Action getIndexApiAction() {
@@ -287,17 +288,20 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchViewAndroidActionBar.clearFocus();
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Пора покормить кота!", Toast.LENGTH_SHORT);
-                toast.show();
+                final DataService ds = new DataService("107.170.25.215", 8080);
+                List<co.example.yuliya.maps.domain.Location> locations = ds.getLocations(latLng.latitude, latLng.longitude, "6km", null, null);
+                MapsActivity.marks.clear();
+                if (locations != null) {
+                    for (int i = 0; i < locations.size(); i++) {
+                        co.example.yuliya.maps.domain.Location loc = locations.get(i);
+                        MapsActivity.marks.put(loc.getId(), loc);
+                    }
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "NOOOOOO Пора покормить кота!", Toast.LENGTH_SHORT);
-                toast.show();
                 return false;
             }
         });

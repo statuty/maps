@@ -21,6 +21,7 @@ import co.example.yuliya.maps.service.DataService;
 public class SearchActivity extends AppCompatActivity {
 
     private EditText name;
+    private EditText category;
     private EditText dist;
     private LatLng latLng;
 
@@ -37,14 +38,15 @@ public class SearchActivity extends AppCompatActivity {
             public void run() {
                 name = (EditText) findViewById(R.id.name);
                 dist = (EditText) findViewById(R.id.dist);
+                category = (EditText) findViewById(R.id.category);
                 final DataService ds = new DataService("107.170.25.215", 8080);
                 Intent intent = getIntent();
                 latLng = intent.getParcelableExtra("latlng");
                 String dis = dist.getText().toString();
-                if (dis == null) {
+                if (dis != null) {
                     dis += "km";
                 }
-                List<Location> locations = ds.getLocations(latLng.latitude, latLng.longitude, dis, null, null);
+                List<Location> locations = ds.getLocations(latLng.latitude, latLng.longitude, dis, category.getText().toString(), name.getText().toString(), null, null);
 
                 MapsActivity.marks.clear();
                 if (locations != null) {
