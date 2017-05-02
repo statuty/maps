@@ -1,6 +1,8 @@
 package co.example.yuliya.maps.domain;
 
-public class GeoPoint {
+import java.io.Serializable;
+
+public class GeoPoint implements Serializable {
     private double lat;
     private double lon;
 

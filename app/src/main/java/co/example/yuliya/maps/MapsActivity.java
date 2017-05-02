@@ -10,7 +10,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,6 +40,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import co.example.yuliya.maps.domain.Category;
+
+
 public class MapsActivity extends AppCompatActivity
         implements
         OnMyLocationButtonClickListener,
@@ -45,7 +53,8 @@ public class MapsActivity extends AppCompatActivity
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
 
-    public static Map<String, LatLng> marks = new HashMap<>();
+    public static Map<String, co.example.yuliya.maps.domain.Location> marks = new HashMap<>();
+    public static Map<String, co.example.yuliya.maps.domain.Location> marklink = new HashMap<>();
 
     private GoogleMap mMap;
     private UiSettings mUiSettings;
@@ -53,25 +62,28 @@ public class MapsActivity extends AppCompatActivity
     private Button save;
     private Button add;
     private Button cansel;
-    private LatLng latLong;
+    private LatLng latLng;
+    private LatLng markerLatLong;
     private boolean hasMarker;
     private boolean isZoomed = false;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     private GoogleApiClient client;
 
     private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
         @Override
         public void onMyLocationChange(Location location) {
-            latLong = new LatLng(location.getLatitude(), location.getLongitude());
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
             if (mMap != null && !isZoomed) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLong, 16.0f));
+                if (marks.isEmpty()) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
+                } else {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
+                }
                 isZoomed = true;
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +95,6 @@ public class MapsActivity extends AppCompatActivity
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
@@ -99,32 +109,42 @@ public class MapsActivity extends AppCompatActivity
 
         enableMyLocation();
 
-        for (String names : marks.keySet()) {
+        for (String id : marks.keySet()) {
             MarkerOptions marker = new MarkerOptions().position(
-                    marks.get(names))
-                    .title(names);
+                    marks.get(id).getLatLng())
+                    .title(marks.get(id).getName());
+            Category category = marks.get(id).getCategory();
+            if (category != null) {
+                marker.snippet(category.getName());
+            }
             marker.icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-            mMap.addMarker(marker);
+            Marker result = mMap.addMarker(marker);
+            marklink.put(result.getId(), marks.get(id));
         }
         mMap.setOnMarkerDragListener(this);
 
-        // mMap.animateCamera(CameraUpdateFactory.zoomBy(11));
-
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(getApplicationContext(), AddMarkerActivity.class);
+                intent.putExtra("location", marklink.get(marker.getId()));
+                intent.putExtra("view", true);
+                startActivity(intent);
+            }
+        });
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
-            public void onMapClick(LatLng latLng) {
+            public void onMapClick(LatLng latLngM) {
                 if (isEditable) {
                     if (!hasMarker) {
-                        //latLong = latLng;
-
+                        markerLatLong = latLngM;
                         MarkerOptions marker = new MarkerOptions().position(
-                                latLng)
+                                latLngM)
                                 .title("").draggable(true);
                         marker.icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                        latLong = latLng;
                         mMap.addMarker(marker);
                         hasMarker = true;
                         save.setVisibility(View.VISIBLE);
@@ -148,7 +168,6 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -185,11 +204,13 @@ public class MapsActivity extends AppCompatActivity
     public void onClickAdd(View v) {
         isEditable = true;
         add.setVisibility(View.INVISIBLE);
+        cansel.setVisibility(View.VISIBLE);
     }
 
     public void onSave(View v) {
         Intent intent = new Intent(getApplicationContext(), AddMarkerActivity.class);
-        intent.putExtra("latlng", latLong);
+        intent.putExtra("latlng", markerLatLong);
+        intent.putExtra("view", false);
         startActivity(intent);
         isEditable = false;
         save.setVisibility(View.INVISIBLE);
@@ -214,13 +235,9 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-        latLong = marker.getPosition();
+        latLng = marker.getPosition();
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("Maps Page") // TODO: Define a title for the content shown.
@@ -237,8 +254,6 @@ public class MapsActivity extends AppCompatActivity
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
@@ -247,8 +262,6 @@ public class MapsActivity extends AppCompatActivity
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
@@ -256,5 +269,38 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    public void onSearchActivity(View v) {
+        Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+        intent.putExtra("latlng", latLng);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_view_menu, menu);
+        MenuItem searchViewItem = menu.findItem(R.id.action_search);
+        final SearchView searchViewAndroidActionBar = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchViewAndroidActionBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchViewAndroidActionBar.clearFocus();
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Пора покормить кота!", Toast.LENGTH_SHORT);
+                toast.show();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "NOOOOOO Пора покормить кота!", Toast.LENGTH_SHORT);
+                toast.show();
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 }

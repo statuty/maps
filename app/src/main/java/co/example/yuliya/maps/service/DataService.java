@@ -1,11 +1,15 @@
 package co.example.yuliya.maps.service;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import co.example.yuliya.maps.domain.Location;
 import okhttp3.HttpUrl;
@@ -15,20 +19,29 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * Created by astatut on 4/18/17.
+ */
+
 public class DataService {
     private final String serverAddress;
+    private final int port;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private OkHttpClient client = new OkHttpClient();
     private ObjectMapper mapper = new ObjectMapper();
 
-    public DataService(String serverAddress) {
+    public DataService(String serverAddress, int port) {
         this.serverAddress = serverAddress;
+        this.port = port;
+        this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public List<Location> getLocations(double lan, double lon, String distance, Integer page, Integer size) {
         HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
+                .scheme("http")
                 .host(serverAddress)
+                .port(port)
                 .addPathSegment("locations")
                 .addQueryParameter("longitude", String.valueOf(lon))
                 .addQueryParameter("latitude", String.valueOf(lan));
@@ -40,16 +53,17 @@ public class DataService {
                 .build();
         Response response = null;
         try {
-            response = client.newCall(request).execute();
-        } catch (IOException e) {
+            response = new RequestTask().execute(request).get();
+        } catch (InterruptedException | ExecutionException e) {
             Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
             throw new RuntimeException("Couldn't receive locations");
         }
         if (response.code() != 200) {
-            throw new RuntimeException("Couldn't receive locations");
+            throw new RuntimeException("Couldn't receive locations. Code = " + response.code());
         }
         try {
-            return mapper.readValue(response.body().string(), List.class);
+            return mapper.readValue(response.body().string(), new TypeReference<List<Location>>() {
+            });
         } catch (IOException e) {
             Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
             throw new RuntimeException("Couldn't receive locations");
@@ -58,7 +72,9 @@ public class DataService {
 
     public Location getLocation(String id) {
         HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
+                .scheme("http")
                 .host(serverAddress)
+                .port(port)
                 .addPathSegment("locations")
                 .addPathSegment(id);
         Request request = new Request.Builder()
@@ -66,9 +82,8 @@ public class DataService {
                 .build();
         Response response = null;
         try {
-            response = client.newCall(request).execute();
-        } catch (IOException e) {
-            Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
+            response = new RequestTask().execute(request).get();
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Couldn't receive locations");
         }
         if (response.code() != 200) {
@@ -82,9 +97,11 @@ public class DataService {
         }
     }
 
-    public void saveLocation(Location location) {
+    public String saveLocation(Location location) {
         HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
+                .scheme("http")
                 .host(serverAddress)
+                .port(port)
                 .addPathSegment("locations");
         RequestBody body;
         try {
@@ -98,13 +115,30 @@ public class DataService {
                 .build();
         Response response = null;
         try {
-            response = client.newCall(request).execute();
-        } catch (IOException e) {
-            Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
+            response = new RequestTask().execute(request).get();
+
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Couldn't receive locations");
         }
+
         if (response.code() != 201) {
             throw new RuntimeException("Couldn't receive locations");
         }
+        String[] header = response.header("Location").split("/");
+        return header[header.length - 1];
     }
+
+    class RequestTask extends AsyncTask<Request, Void, Response> {
+
+        @Override
+        protected Response doInBackground(Request... params) {
+            try {
+                return client.newCall(params[0]).execute();
+            } catch (IOException e) {
+                Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
+                throw new RuntimeException("Couldn't receive locations");
+            }
+        }
+    }
+
 }
