@@ -74,14 +74,16 @@ public class AddMarkerActivity extends AppCompatActivity {
             final DataService ds = new DataService("107.170.25.215", 8080);
 
             public void run() {
-                String id = null;
                 Location loc = null;
                 if (latLng != null) {
                     loc = new Location(null, name.getText().toString(), description.getText().toString(), new GeoPoint(latLng.latitude, latLng.longitude), new Category(category.getText().toString()));
                 } else if (location != null) {
                     loc = location;
+                    loc.setName(name.getText().toString());
+                    loc.setDescription(description.getText().toString());
+                    loc.setCategory(new Category(category.getText().toString()));
                 }
-                id = ds.saveLocation(loc);
+                String id = ds.saveLocation(loc);
                 MapsActivity.marks.put(id, loc);
                 Intent intent = new Intent(AddMarkerActivity.this, MapsActivity.class);
                 startActivity(intent); //I always put 0 for someIntValue

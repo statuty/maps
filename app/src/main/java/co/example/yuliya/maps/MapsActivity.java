@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -109,7 +110,7 @@ public class MapsActivity extends AppCompatActivity
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
         enableMyLocation();
-
+        mMap.clear();
         for (String id : marks.keySet()) {
             MarkerOptions marker = new MarkerOptions().position(
                     marks.get(id).getLatLng())
@@ -286,22 +287,32 @@ public class MapsActivity extends AppCompatActivity
         final SearchView searchViewAndroidActionBar = (SearchView) MenuItemCompat.getActionView(searchViewItem);
         searchViewAndroidActionBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(final String query) {
                 searchViewAndroidActionBar.clearFocus();
-                final DataService ds = new DataService("107.170.25.215", 8080);
-                List<co.example.yuliya.maps.domain.Location> locations = ds.getLocations(latLng.latitude, latLng.longitude, "6km", null, null);
-                MapsActivity.marks.clear();
-                if (locations != null) {
-                    for (int i = 0; i < locations.size(); i++) {
-                        co.example.yuliya.maps.domain.Location loc = locations.get(i);
-                        MapsActivity.marks.put(loc.getId(), loc);
+                new MyAsyncTask<Void, Void, Void>(new MyListener() {
+                    @Override
+                    public void onComplete() {
+                        onMapReady(mMap);
                     }
-                }
+                }) {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        final DataService ds = new DataService("107.170.25.215", 8080);
+                        List<co.example.yuliya.maps.domain.Location> locations = ds.getLocations(latLng.latitude, latLng.longitude, "6km", null, query, 0, 100);
+                        locations.addAll(ds.getLocations(latLng.latitude, latLng.longitude, "6km", query, null, 0, 100));
+                        MapsActivity.marks.clear();
+                        for (int i = 0; i < locations.size(); i++) {
+                            co.example.yuliya.maps.domain.Location loc = locations.get(i);
+                            MapsActivity.marks.put(loc.getId(), loc);
+                        }
+                        return null;
+                    }
+                }.execute();
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(final String newText) {
                 return false;
             }
         });

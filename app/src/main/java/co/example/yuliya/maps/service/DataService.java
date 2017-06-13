@@ -3,8 +3,10 @@ package co.example.yuliya.maps.service;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -45,9 +47,9 @@ public class DataService {
                 .addPathSegment("locations")
                 .addQueryParameter("longitude", String.valueOf(lon))
                 .addQueryParameter("latitude", String.valueOf(lan));
-        urlBuilder = distance != null ? urlBuilder.addQueryParameter("distance", distance) : urlBuilder;
-        urlBuilder = category != null ? urlBuilder.addQueryParameter("category", category) : urlBuilder;
-        urlBuilder = name != null ? urlBuilder.addQueryParameter("name", name) : urlBuilder;
+        urlBuilder = (distance != null && !distance.isEmpty()) ? urlBuilder.addQueryParameter("distance", distance) : urlBuilder;
+        urlBuilder = (category != null && !category.isEmpty()) ? urlBuilder.addQueryParameter("category", category) : urlBuilder;
+        urlBuilder = (name != null && !name.isEmpty()) ? urlBuilder.addQueryParameter("name", name) : urlBuilder;
         urlBuilder = page != null ? urlBuilder.addQueryParameter("page", page.toString()) : urlBuilder;
         urlBuilder = size != null ? urlBuilder.addQueryParameter("size", size.toString()) : urlBuilder;
         Request request = new Request.Builder()
@@ -55,15 +57,10 @@ public class DataService {
                 .build();
         Response response = null;
         try {
-            response = new RequestTask().execute(request).get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
-            throw new RuntimeException("Couldn't receive locations");
-        }
-        if (response.code() != 200) {
-            throw new RuntimeException("Couldn't receive locations. Code = " + response.code());
-        }
-        try {
+            response = client.newCall(request).execute();
+            if (response.code() != 200) {
+                throw new RuntimeException("Couldn't receive locations. Code = " + response.code());
+            }
             return mapper.readValue(response.body().string(), new TypeReference<List<Location>>() {
             });
         } catch (IOException e) {
@@ -85,14 +82,12 @@ public class DataService {
         Response response = null;
         try {
             response = new RequestTask().execute(request).get();
+            if (response.code() != 200) {
+                throw new RuntimeException("Couldn't receive locations");
+            }
+            return mapper.readValue(response.body().string(), Location.class);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Couldn't receive locations");
-        }
-        if (response.code() != 200) {
-            throw new RuntimeException("Couldn't receive locations");
-        }
-        try {
-            return mapper.readValue(response.body().string(), Location.class);
         } catch (IOException e) {
             Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
             throw new RuntimeException("Couldn't receive locations");

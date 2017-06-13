@@ -46,7 +46,7 @@ public class SearchActivity extends AppCompatActivity {
                 if (dis != null) {
                     dis += "km";
                 }
-                List<Location> locations = ds.getLocations(latLng.latitude, latLng.longitude, dis, category.getText().toString(), name.getText().toString(), null, null);
+                List<Location> locations = ds.getLocations(latLng.latitude, latLng.longitude, dis, category.getText().toString(), name.getText().toString(), 0, 100);
 
                 MapsActivity.marks.clear();
                 if (locations != null) {

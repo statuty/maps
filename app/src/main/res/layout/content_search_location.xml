@@ -35,6 +35,23 @@
             android:inputType="textPersonName" />
 
         <TextView
+            android:text="@string/marker_category"
+            android:layout_width="385dp"
+            android:layout_height="32dp"
+            android:id="@+id/textView11"
+            android:labelFor="@+id/category"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="30"
+            android:hint="Category"
+            android:id="@+id/category" />
+
+        <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
