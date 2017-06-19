@@ -27,10 +27,10 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
             android:hint="@string/marker_name"
             android:ems="10"
             android:id="@+id/name"
+            android:inputType="text"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
 
@@ -46,14 +46,12 @@
             android:textSize="14sp"
             android:layout_marginLeft="5dp" />
 
-        <EditText
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="30"
-            android:hint="@string/marker_category"
-            android:id="@+id/category"
-            android:textColorHint="@android:color/black" />
+            android:id="@+id/spinner_cat"
+            android:layout_column="1"
+            android:layout_weight="1" />
 
         <TextView
             android:text="@string/marker_category"
@@ -68,7 +66,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:inputType="text"
             android:ems="30"
             android:hint="@string/marker_desc"
             android:id="@+id/desc"

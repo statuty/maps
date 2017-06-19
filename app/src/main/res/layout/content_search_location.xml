@@ -59,15 +59,12 @@
             android:textColor="@color/common_google_signin_btn_text_light_default"
             android:paddingLeft="5dp" />
 
-        <EditText
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/marker_category"
-            android:id="@+id/category"
-            android:textSize="18sp"
-            android:inputType="text"
+            android:id="@+id/spinner_cat"
             android:layout_column="1"
-            android:textColorHint="@android:color/black" />
+            android:layout_weight="1" />
 
         <TextView
             android:text="@string/marker_category"
@@ -83,6 +80,7 @@
             android:paddingTop="7dp"
             android:textColor="@color/common_google_signin_btn_text_light_default"
             android:paddingLeft="5dp" />
+
 
         <EditText
             android:id="@+id/dist"

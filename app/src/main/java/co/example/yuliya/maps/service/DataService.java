@@ -79,19 +79,18 @@ public class DataService {
                 .build();
         Response response = null;
         try {
-            response = new RequestTask().execute(request).get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
-            throw new RuntimeException("Couldn't receive locations");
+            response = client.newCall(request).execute();
+        } catch (IOException e) {
+            throw new RuntimeException("Couldn't receive categories. Code = " + response.code());
         }
         if (response.code() != 200) {
-            throw new RuntimeException("Couldn't receive locations. Code = " + response.code());
+            throw new RuntimeException("Couldn't receive categories. Code = " + response.code());
         }
         try {
             return mapper.readValue(response.body().string(), new TypeReference<List<String>>() {});
         } catch (IOException e) {
-            Log.d(DataService.class.getName(), "getLocations: " + e.getMessage(), e);
-            throw new RuntimeException("Couldn't receive locations");
+            Log.d(DataService.class.getName(), "getCategories: " + e.getMessage(), e);
+            throw new RuntimeException("Couldn't receive categories");
         }
     }
 
