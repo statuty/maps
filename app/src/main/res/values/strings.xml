@@ -1,20 +1,24 @@
 <resources>
     <string name="app_name">govitebsk</string>
     <string name="title_activity_maps">govitebsk</string>
-    <string name="title_activity_add_marker">Save marker</string>
-    <string name="title_activity_search">Search</string>
+    <string name="title_activity_add_marker">Сохранить точку</string>
+    <string name="title_activity_search">Поиск</string>
 
-    <string name="save">Save</string>
-    <string name="edit">Edit</string>
-    <string name="cansel">Cansel</string>
-    <string name="add">Add</string>
-    <string name="marker_name">Name:</string>
-    <string name="marker_category">Category:</string>
-    <string name="marker_desc">Description:</string>
-    <string name="search">Search</string>
+    <string name="save">Сохранить</string>
+    <string name="edit">Редактировать</string>
+    <string name="cansel">Отменить</string>
+    <string name="add">Добавить</string>
+    <string name="marker_name">Название</string>
+    <string name="marker_category">Категория</string>
+    <string name="marker_desc">Описание</string>
+    <string name="search">Поиск</string>
 
-    <string name="loc_name">Name:</string>
-    <string name="loc_dist">Distance:</string>
+    <string name="loc_name">Название</string>
+    <string name="loc_dist1">Расстояние</string>
+    <string name="loc_dist">Расстояние, км(допустимы дробные значения)</string>
+    <string name="loc_dot">Новая точка</string>
+    <string name="loc_dot_edit">Редактировать</string>
+    <string name="loc_dot_view">Просмотр</string>
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>

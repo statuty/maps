@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -59,10 +60,11 @@ public class MapsActivity extends AppCompatActivity
     public static Map<String, co.example.yuliya.maps.domain.Location> marklink = new HashMap<>();
 
     private GoogleMap mMap;
+    private GoogleMap mMap1;
     private UiSettings mUiSettings;
     private boolean isEditable;
     private Button save;
-    private Button add;
+    private FloatingActionButton add;
     private Button cansel;
     private LatLng latLng;
     private LatLng markerLatLong;
@@ -92,7 +94,7 @@ public class MapsActivity extends AppCompatActivity
         setContentView(R.layout.activity_maps);
         save = (Button) findViewById(R.id.save_marker);
         cansel = (Button) findViewById(R.id.cansel_marker);
-        add = (Button) findViewById(R.id.add);
+        add = (FloatingActionButton) findViewById(R.id.add);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -104,7 +106,6 @@ public class MapsActivity extends AppCompatActivity
     public void onMapReady(GoogleMap map) {
         mMap = map;
         mUiSettings = mMap.getUiSettings();
-        mUiSettings.setZoomControlsEnabled(true);
         mUiSettings.setMyLocationButtonEnabled(true);
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
@@ -132,6 +133,7 @@ public class MapsActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), AddMarkerActivity.class);
                 intent.putExtra("location", marklink.get(marker.getId()));
                 intent.putExtra("view", true);
+                intent.putExtra("edit", true);
                 startActivity(intent);
             }
         });
@@ -141,6 +143,7 @@ public class MapsActivity extends AppCompatActivity
             public void onMapClick(LatLng latLngM) {
                 if (isEditable) {
                     if (!hasMarker) {
+                        mMap1 = mMap;
                         markerLatLong = latLngM;
                         MarkerOptions marker = new MarkerOptions().position(
                                 latLngM)
@@ -222,6 +225,7 @@ public class MapsActivity extends AppCompatActivity
 
     public void onCansel(View v) {
         isEditable = false;
+        mMap = mMap1;
         save.setVisibility(View.INVISIBLE);
         cansel.setVisibility(View.INVISIBLE);
         add.setVisibility(View.VISIBLE);

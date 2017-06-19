@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="100dp"
         android:paddingEnd="5dp"
         android:paddingRight="5dp"
         android:layout_alignParentTop="true"
@@ -14,124 +15,130 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="20dp">
 
-        <TableLayout
+        <TextView
+            android:text="@string/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_weight="1"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:textStyle="normal|bold" />
+
+        <EditText
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView"
+            android:inputType="text"
+            android:hint="@string/loc_name"
+            android:textSize="18sp"
+            android:layout_column="1"
             android:layout_weight="1"
-            android:baselineAligned="false"
-            android:stretchColumns="1"
-            android:shrinkColumns="0">
+            android:textColorHighlight="@android:color/black"
+            android:textColorHint="@android:color/black" />
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:labelFor="@+id/name"
+            android:text="@string/loc_name"
+            android:textSize="14sp"
+            android:layout_column="0"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:paddingTop="7dp"
+            android:layout_weight="1"
+            android:textColor="@color/common_google_signin_btn_text_light_default"
+            android:paddingLeft="5dp" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:labelFor="@+id/name"
-                    android:text="@string/loc_name"
-                    android:textSize="18sp"
-                    android:layout_column="0"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:paddingTop="7dp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/marker_category"
+            android:id="@+id/category"
+            android:textSize="18sp"
+            android:inputType="text"
+            android:layout_column="1"
+            android:textColorHint="@android:color/black" />
 
-                <EditText
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/textView"
-                    android:inputType="text"
-                    android:hint="@string/loc_name"
-                    android:textSize="14sp"
-                    android:layout_column="1"
-                    android:layout_weight="3.06" />
-            </TableRow>
+        <TextView
+            android:text="@string/marker_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/textView11"
+            android:labelFor="@+id/category"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_column="0"
+            android:paddingTop="7dp"
+            android:textColor="@color/common_google_signin_btn_text_light_default"
+            android:paddingLeft="5dp" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/dist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textView2"
+            android:inputType="numberDecimal|number"
+            android:hint="@string/loc_dist1"
+            android:textSize="18sp"
+            android:layout_column="1"
+            android:layout_weight="1"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black" />
 
-                <TextView
-                    android:text="@string/marker_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/textView11"
-                    android:labelFor="@+id/category"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:textSize="18sp"
-                    android:layout_weight="1.01"
-                    android:layout_column="0"
-                    android:paddingTop="7dp" />
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:hint="@string/marker_category"
-                    android:id="@+id/category"
-                    android:textSize="14sp"
-                    android:inputType="text"
-                    android:layout_column="1" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/textView"
-                    android:labelFor="@+id/dist"
-                    android:text="@string/loc_dist"
-                    android:textSize="18sp"
-                    android:layout_column="0"
-                    android:paddingTop="7dp" />
-
-                <EditText
-                    android:id="@+id/dist"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/textView2"
-                    android:inputType="numberDecimal|number"
-                    android:hint="@string/loc_dist"
-                    android:textSize="14sp"
-                    android:layout_column="1" />
-            </TableRow>
-
-        </TableLayout>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView"
+            android:labelFor="@+id/dist"
+            android:text="@string/loc_dist"
+            android:textSize="14sp"
+            android:layout_column="0"
+            android:paddingTop="7dp"
+            android:layout_weight="1"
+            android:textColor="@color/common_google_signin_btn_text_light_default"
+            android:paddingLeft="5dp" />
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="353dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:weightSum="1"
+            android:layout_marginTop="20dp">
 
             <Button
                 android:id="@+id/search"
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:onClick="onSearch"
-                android:text="@string/search" />
+                android:text="@string/search"
+                android:background="@color/colorButton"
+                android:layout_weight="0.34" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="153dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/cansel"
                 android:text="@string/cansel"
-                android:onClick="onCansel" />
+                android:onClick="onCansel"
+                android:background="@color/colorButton"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.31"
+                android:layout_marginRight="10dp" />
         </LinearLayout>
 
     </LinearLayout>

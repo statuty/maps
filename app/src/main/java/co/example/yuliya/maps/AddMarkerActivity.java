@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -25,6 +26,8 @@ public class AddMarkerActivity extends AppCompatActivity {
     private boolean view;
     private Button add;
     private Button edit;
+    private boolean isEdit;
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +36,23 @@ public class AddMarkerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
+        title = (TextView) findViewById(R.id.title);
         latLng = intent.getParcelableExtra("latlng");
         location = (Location) getIntent().getSerializableExtra("location");
         view = intent.getBooleanExtra("view", false);
+        isEdit = intent.getBooleanExtra("edit", false);
         name = (EditText) findViewById(R.id.name);
         category = (EditText) findViewById(R.id.category);
         description = (EditText) findViewById(R.id.desc);
         add = (Button) findViewById(R.id.add);
         edit = (Button) findViewById(R.id.edit);
+        if (isEdit) {
+            title.setText(R.string.loc_dot_edit);
+        } else {
+            title.setText(R.string.loc_dot);
+        }
         if (view) {
+            title.setText(R.string.loc_dot_view);
             name.setEnabled(false);
             description.setEnabled(false);
             category.setEnabled(false);
