@@ -112,9 +112,9 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/cansel"
-                android:text="@string/cansel"
-                android:onClick="onCansel"
+                android:id="@+id/cancel"
+                android:text="@string/canсel"
+                android:onClick="onCancel"
                 android:background="@color/colorButton"
                 android:layout_weight="1" />
         </LinearLayout>

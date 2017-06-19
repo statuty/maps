@@ -102,7 +102,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void onCansel(View v) {
+    public void onCancel(View v) {
         Intent intent = new Intent(AddMarkerActivity.this, MapsActivity.class);
         startActivity(intent);
     }

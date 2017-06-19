@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -61,9 +60,9 @@ public class MapsActivity extends AppCompatActivity
     private GoogleMap mMap;
     private UiSettings mUiSettings;
     private boolean isEditable;
-    private Button save;
+    private FloatingActionButton save;
     private FloatingActionButton add;
-    private Button cancel;
+    private FloatingActionButton cancel;
     private LatLng latLng;
     private LatLng markerLatLong;
     private boolean hasMarker;
@@ -90,8 +89,8 @@ public class MapsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        save = (Button) findViewById(R.id.save_marker);
-        cancel = (Button) findViewById(R.id.cansel_marker);
+        save = (FloatingActionButton) findViewById(R.id.save_marker);
+        cancel = (FloatingActionButton) findViewById(R.id.canсel_marker);
         add = (FloatingActionButton) findViewById(R.id.add);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -224,7 +223,7 @@ public class MapsActivity extends AppCompatActivity
         add.setVisibility(View.VISIBLE);
     }
 
-    public void onCansel(View v) {
+    public void onCancel(View v) {
         isEditable = false;
         save.setVisibility(View.INVISIBLE);
         cancel.setVisibility(View.INVISIBLE);

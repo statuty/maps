@@ -36,21 +36,31 @@
             android:layout_marginTop="12dp"
             android:onClick="onClickAdd" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:id="@+id/save_marker"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="19dp"
+            app:srcCompat="@android:drawable/ic_menu_save"
+            app:backgroundTint="@android:color/holo_blue_dark"
             android:text="@string/save"
             android:onClick="onSave" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cansel_marker"
+            android:id="@+id/canсel_marker"
             android:visibility="invisible"
-            android:text="@string/cansel"
-            android:onClick="onCansel" />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="19dp"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+            app:backgroundTint="@android:color/holo_blue_dark"
+            android:text="@string/canсel"
+            android:onClick="onCancel" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
