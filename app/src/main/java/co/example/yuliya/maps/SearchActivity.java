@@ -43,7 +43,7 @@ public class SearchActivity extends AppCompatActivity {
                 Intent intent = getIntent();
                 latLng = intent.getParcelableExtra("latlng");
                 String dis = dist.getText().toString();
-                if (dis != null) {
+                if (!dis.isEmpty()) {
                     dis += "km";
                 }
                 List<Location> locations = ds.getLocations(latLng.latitude, latLng.longitude, dis, category.getText().toString(), name.getText().toString(), 0, 100);
