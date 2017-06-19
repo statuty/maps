@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -60,12 +59,11 @@ public class MapsActivity extends AppCompatActivity
     public static Map<String, co.example.yuliya.maps.domain.Location> marklink = new HashMap<>();
 
     private GoogleMap mMap;
-    private GoogleMap mMap1;
     private UiSettings mUiSettings;
     private boolean isEditable;
     private Button save;
     private FloatingActionButton add;
-    private Button cansel;
+    private Button cancel;
     private LatLng latLng;
     private LatLng markerLatLong;
     private boolean hasMarker;
@@ -93,7 +91,7 @@ public class MapsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         save = (Button) findViewById(R.id.save_marker);
-        cansel = (Button) findViewById(R.id.cansel_marker);
+        cancel = (Button) findViewById(R.id.cansel_marker);
         add = (FloatingActionButton) findViewById(R.id.add);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -111,20 +109,7 @@ public class MapsActivity extends AppCompatActivity
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
         enableMyLocation();
-        mMap.clear();
-        for (String id : marks.keySet()) {
-            MarkerOptions marker = new MarkerOptions().position(
-                    marks.get(id).getLatLng())
-                    .title(marks.get(id).getName());
-            Category category = marks.get(id).getCategory();
-            if (category != null) {
-                marker.snippet(category.getName());
-            }
-            marker.icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-            Marker result = mMap.addMarker(marker);
-            marklink.put(result.getId(), marks.get(id));
-        }
+        fillMap();
         mMap.setOnMarkerDragListener(this);
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -143,21 +128,36 @@ public class MapsActivity extends AppCompatActivity
             public void onMapClick(LatLng latLngM) {
                 if (isEditable) {
                     if (!hasMarker) {
-                        mMap1 = mMap;
                         markerLatLong = latLngM;
-                        MarkerOptions marker = new MarkerOptions().position(
-                                latLngM)
+                        MarkerOptions marker = new MarkerOptions().position(latLngM)
                                 .title("").draggable(true);
                         marker.icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                         mMap.addMarker(marker);
                         hasMarker = true;
                         save.setVisibility(View.VISIBLE);
-                        cansel.setVisibility(View.VISIBLE);
+                        cancel.setVisibility(View.VISIBLE);
                     }
                 }
             }
         });
+    }
+
+    private void fillMap() {
+        mMap.clear();
+        for (String id : marks.keySet()) {
+            MarkerOptions marker = new MarkerOptions().position(
+                    marks.get(id).getLatLng())
+                    .title(marks.get(id).getName());
+            Category category = marks.get(id).getCategory();
+            if (category != null) {
+                marker.snippet(category.getName());
+            }
+            marker.icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+            Marker result = mMap.addMarker(marker);
+            marklink.put(result.getId(), marks.get(id));
+        }
     }
 
 
@@ -207,9 +207,10 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public void onClickAdd(View v) {
+        hasMarker = false;
         isEditable = true;
         add.setVisibility(View.INVISIBLE);
-        cansel.setVisibility(View.VISIBLE);
+        cancel.setVisibility(View.VISIBLE);
     }
 
     public void onSave(View v) {
@@ -219,16 +220,16 @@ public class MapsActivity extends AppCompatActivity
         startActivity(intent);
         isEditable = false;
         save.setVisibility(View.INVISIBLE);
-        cansel.setVisibility(View.INVISIBLE);
+        cancel.setVisibility(View.INVISIBLE);
         add.setVisibility(View.VISIBLE);
     }
 
     public void onCansel(View v) {
         isEditable = false;
-        mMap = mMap1;
         save.setVisibility(View.INVISIBLE);
-        cansel.setVisibility(View.INVISIBLE);
+        cancel.setVisibility(View.INVISIBLE);
         add.setVisibility(View.VISIBLE);
+        fillMap();
     }
 
     @Override
